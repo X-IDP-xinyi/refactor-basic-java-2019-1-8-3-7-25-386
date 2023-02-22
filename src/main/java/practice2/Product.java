@@ -3,14 +3,14 @@ package practice2;
 import java.math.BigDecimal;
 
 public class Product {
-    private BigDecimal price;
-    private BigDecimal availableDiscounts;
-    private long code;
+    private final BigDecimal price;
+    private final BigDecimal availableDiscounts;
+    private final long code;
 
     public Product(long code, double price, double discount) {
         this.code = code;
-        this.price = new BigDecimal(price);
-        this.availableDiscounts = new BigDecimal(discount);
+        this.price = BigDecimal.valueOf(price);
+        this.availableDiscounts = BigDecimal.valueOf(discount);
     }
 
     public BigDecimal getPrice() {
