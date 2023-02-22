@@ -1,13 +1,14 @@
 package practice2;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 public class Receipt {
 
     public Receipt() {
-        tax = new BigDecimal(0.1);
-        tax = tax.setScale(2, BigDecimal.ROUND_HALF_UP);
+        tax = BigDecimal.valueOf(0.1);
+        tax = tax.setScale(2, RoundingMode.HALF_UP);
     }
 
     private BigDecimal tax;
@@ -17,17 +18,23 @@ public class Receipt {
 
         for (Product product : products) {
             OrderItem curItem = findOrderItemByProduct(items, product);
-
-            BigDecimal reducedPrice = product.getPrice()
-                    .multiply(product.getDiscountRate())
-                    .multiply(new BigDecimal(curItem.getCount()));
-
+            BigDecimal reducedPrice = getDiscountRate(product, curItem);
             subTotal = subTotal.subtract(reducedPrice);
         }
         BigDecimal taxTotal = subTotal.multiply(tax);
         BigDecimal grandTotal = subTotal.add(taxTotal);
 
-        return grandTotal.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return BigDecimal2double(grandTotal);
+    }
+
+    private static BigDecimal getDiscountRate(Product product, OrderItem curItem) {
+        return product.getPrice()
+                .multiply(product.getDiscountRate())
+                .multiply(new BigDecimal(curItem.getCount()));
+    }
+
+    private static double BigDecimal2double(BigDecimal grandTotal) {
+        return grandTotal.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
 
