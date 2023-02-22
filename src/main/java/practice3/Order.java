@@ -5,14 +5,14 @@ import java.util.List;
 
 public class Order {
 
-    private List<OrderLineItem> orderLineItemList;
-    private List<BigDecimal> discounts;
-    private BigDecimal tax;
+    private final List<OrderLineItem> orderLineItemList;
+    private final List<BigDecimal> discounts;
+    private final BigDecimal tax;
 
     public Order(List<OrderLineItem> orderLineItemList, List<BigDecimal> discounts) {
         this.orderLineItemList = orderLineItemList;
         this.discounts = discounts;
-        this.tax = new BigDecimal(0.1);
+        this.tax = new BigDecimal("0.1");
     }
 
     public BigDecimal calculate() {
@@ -32,8 +32,6 @@ public class Order {
         BigDecimal tax = subTotal.multiply(this.tax);
 
         // calculate GrandTotal
-        BigDecimal grandTotal = subTotal.add(tax);
-
-        return grandTotal;
+        return subTotal.add(tax);
     }
 }
