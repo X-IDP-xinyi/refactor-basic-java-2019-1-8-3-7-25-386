@@ -5,9 +5,9 @@ import java.util.List;
 
 public class Order {
 
-    private final List<OrderLineItem> orderLineItemList;
-    private final List<BigDecimal> discounts;
-    private final BigDecimal tax;
+    private List<OrderLineItem> orderLineItemList;
+    private List<BigDecimal> discounts;
+    private BigDecimal tax;
 
     public Order(List<OrderLineItem> orderLineItemList, List<BigDecimal> discounts) {
         this.orderLineItemList = orderLineItemList;
@@ -18,20 +18,28 @@ public class Order {
     public BigDecimal calculate() {
         BigDecimal subTotal = new BigDecimal(0);
 
-        // Total up line items
-        for (OrderLineItem lineItem : orderLineItemList) {
-            subTotal = subTotal.add(lineItem.getPrice());
-        }
+        subTotal = getSubTotal(subTotal);
+        subTotal = getDiscounts(subTotal);
 
-        // Subtract discounts
+        tax = getTax(subTotal);
+        return subTotal.add(tax);
+    }
+
+    private BigDecimal getDiscounts(BigDecimal subTotal) {
         for (BigDecimal discount : discounts) {
             subTotal = subTotal.subtract(discount);
         }
+        return subTotal;
+    }
 
-        // calculate tax
-        BigDecimal tax = subTotal.multiply(this.tax);
+    private BigDecimal getSubTotal(BigDecimal subTotal) {
+        for (OrderLineItem lineItem : orderLineItemList) {
+            subTotal = subTotal.add(lineItem.getPrice());
+        }
+        return subTotal;
+    }
 
-        // calculate GrandTotal
-        return subTotal.add(tax);
+    private BigDecimal getTax(BigDecimal subTotal) {
+        return subTotal.multiply(this.tax);
     }
 }
